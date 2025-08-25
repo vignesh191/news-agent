@@ -1,200 +1,272 @@
-# News Agent - TikTok Content Generator
+# News Agent 📰
 
-A Python API that fetches top news headlines, summarizes them using AI, and generates TikTok-ready content with hashtags.
+A clean, modular API for fetching and summarizing news articles for TikTok content creation. This package provides news fetching, content processing, and AI-powered summarization with automatic retry mechanisms for robust article processing.
 
-## Features
+## ✨ Features
 
-- 📰 Fetch top 5 news headlines from NewsAPI for any category
-- 🤖 AI-powered summaries using Google Gemini (TikTok-style) or newspaper3k NLP
-- 🏷️ Automatic hashtag generation based on article keywords and category
-- 📱 TikTok-ready content format with title, summary, source, date, and hashtags
-- 🛡️ Robust error handling and fallback mechanisms
+- **🔄 Automatic Retry Logic**: Fetches additional articles if some fail to download
+- **🤖 AI-Powered Summaries**: TikTok-style content generation using Google's Gemini AI
+- **📊 Smart Caching**: LRU cache for article processing to improve performance
+- **🏷️ Hashtag Generation**: Automatic hashtag creation from article keywords
+- **📦 Modular Design**: Clean separation of concerns with dedicated modules
+- **🛡️ Robust Error Handling**: Custom exceptions and comprehensive logging
+- **⚡ Lazy Loading**: API clients initialized only when needed
 
-## Installation
+## 🚀 Quick Start
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd news-agent
-```
+### Installation
 
-2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Set up environment variables:
-Create a `.env` file in the project root with your API keys:
-```env
-NEWS_API_KEY=your_news_api_key_here
+### Environment Setup
+
+Create a `.env` file:
+
+```bash
+NEWS_API_KEY=your_newsapi_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### Getting API Keys
-
-- **NewsAPI Key**: Sign up at [newsapi.org](https://newsapi.org) (free tier available)
-- **Gemini API Key**: Get from [Google AI Studio](https://makersuite.google.com/app/apikey)
-
-## Usage
-
-### Basic Usage
+### Simple Usage
 
 ```python
-from api import get_daily_news
+from newsagent import get_daily_news
 
-# Get business news with TikTok-style summaries
-news = get_daily_news(category="business", use_tiktok_summary=True)
+# Get 5 business articles with TikTok summaries
+articles = get_daily_news(
+    category="business",
+    use_tiktok_summary=True,
+    page_size=5
+)
 
-# Get sports news with newspaper3k summaries
-sports_news = get_daily_news(category="sports", use_tiktok_summary=False)
+for article in articles:
+    print(f"Title: {article.title}")
+    print(f"Summary: {article.summary}")
+    print(f"Hashtags: {', '.join(article.hashtags)}")
 ```
 
-### Available Categories
+## 📖 API Reference
 
-- `business` - Business and financial news
-- `sports` - Sports news and updates
-- `technology` - Tech industry news
-- `entertainment` - Entertainment and celebrity news
-- `health` - Health and medical news
-- `science` - Scientific discoveries and research
-- `general` - General news and current events
+### Main Functions
 
-### Response Format
+#### `get_daily_news(category, use_tiktok_summary, page_size, max_retries)`
 
-The API returns a list of article dictionaries with the following structure:
+Convenience function to get daily news articles.
+
+**Parameters:**
+- `category` (str): News category (business, technology, sports, etc.)
+- `use_tiktok_summary` (bool): Whether to generate TikTok-style summaries
+- `page_size` (int): Number of articles to successfully process (default: 5)
+- `max_retries` (int): Maximum additional articles to try if some fail (default: 10)
+
+**Returns:** List of `NewsArticle` objects
+
+### Classes
+
+#### `NewsAPIClient`
+
+Singleton-like client for easy access to NewsAPI functionality.
 
 ```python
-[
-  {
-    "title": "Article Title Here",
-    "summary": "The generated summary/script here (TikTok-friendly or newspaper3k summary)",
-    "source": "Website name or URL",
-    "publishedAt": "2025-08-23T20:32:08Z",
-    "hashtags": ["#Business", "#Finance", "#News"]
-  }
-]
+from newsagent import NewsAPIClient
+
+client = NewsAPIClient.get_instance()
+articles = client.get_daily_news("technology", page_size=3)
 ```
 
-### Example Output
+#### `NewsAPI`
+
+Core API class for advanced usage and custom configuration.
 
 ```python
-from api import get_daily_news
+from newsagent.core import NewsAPI
 
-# Fetch technology news
-tech_news = get_daily_news(category="technology", use_tiktok_summary=True)
-
-for i, article in enumerate(tech_news, 1):
-    print(f"\n{i}. {article['title']}")
-    print(f"   Summary: {article['summary']}")
-    print(f"   Source: {article['source']}")
-    print(f"   Date: {article['publishedAt']}")
-    print(f"   Hashtags: {' '.join(article['hashtags'])}")
+api = NewsAPI(news_api_key="your_key", gemini_api_key="your_key")
+articles = api.get_daily_news("science", max_retries=20)
 ```
 
-**Example hashtags output:**
-```
-Hashtags: #technology #AI #innovation #startup #funding
-```
+### Data Models
 
-## Advanced Usage
-
-### Using the NewsAPI Class Directly
+#### `NewsArticle`
 
 ```python
-from api import NewsAPI
+@dataclass
+class NewsArticle:
+    title: str
+    summary: str
+    source: str
+    published_at: str
+    hashtags: List[str]
+    url: str
+```
 
-# Create an instance
-news_api = NewsAPI()
+#### `ArticleContent`
 
-# Get raw headlines
-headlines = news_api.get_top_headlines(category="business", page_size=10)
+```python
+@dataclass
+class ArticleContent:
+    text: str
+    keywords: List[str]
+    summary: str
+    url: str
+```
 
-# Get article content with NLP
-article_content = news_api.get_article_content("https://example.com/article")
-if article_content:
-    text, keywords, summary = article_content
-    print(f"Keywords: {keywords}")
-    print(f"NLP Summary: {summary}")
+## 🏗️ Architecture
 
-# Generate hashtags from URL
-hashtags = news_api.generate_hashtags("https://example.com/article", "technology")
+The package is organized into focused modules with logical subdirectories:
+
+```
+newsagent/
+├── __init__.py          # Package interface and main exports
+├── client.py            # Client interface and convenience functions
+├── core.py              # Main NewsAPI orchestration class
+├── data/                # Data models and exceptions
+│   ├── __init__.py      # Data module exports
+│   ├── models.py        # NewsArticle and ArticleContent dataclasses
+│   └── exceptions.py    # Custom exception definitions
+├── services/            # External integrations and processing
+│   ├── __init__.py      # Services module exports
+│   ├── ai_services.py   # Gemini AI summarization service
+│   ├── news_fetcher.py  # NewsAPI integration and fetching
+│   └── processors.py    # Article processing and hashtag generation
+└── utils/               # Utilities and configuration
+    ├── __init__.py      # Utils module exports
+    └── config.py        # Configuration constants and setup
+```
+
+### 📁 **Detailed File Descriptions**
+
+#### **Root Level**
+- **`__init__.py`** - Main package interface exposing the most commonly used classes and functions
+- **`client.py`** - High-level client class with singleton pattern and convenience functions for easy usage
+- **`core.py`** - Central orchestrator that coordinates all services and implements the main business logic
+
+#### **`data/` - Data Layer**
+- **`models.py`** - Dataclass definitions for `NewsArticle` (final output) and `ArticleContent` (raw processed content)
+- **`exceptions.py`** - Custom exception hierarchy: `NewsAPIError`, `ConfigurationError`, `ArticleProcessingError`
+
+#### **`services/` - Service Layer**  
+- **`ai_services.py`** - Gemini AI integration for generating TikTok-style summaries with configurable prompts
+- **`news_fetcher.py`** - NewsAPI client wrapper handling headline fetching, pagination, and URL deduplication
+- **`processors.py`** - Article content extraction using newspaper3k, hashtag generation, and caching logic
+
+#### **`utils/` - Utility Layer**
+- **`config.py`** - Centralized configuration management, environment variable handling, logging setup, and constants
+
+#### **Support Files**
+- **`api.py`** - Backward compatibility layer that re-exports everything from the new structure
+- **`example.py`** - Comprehensive usage examples showing different integration patterns
+- **`requirements.txt`** - Python package dependencies with version specifications
+
+### Key Design Principles
+
+1. **Single Responsibility**: Each module has one clear purpose
+2. **Dependency Injection**: API keys can be provided or read from environment
+3. **Lazy Loading**: Heavy resources initialized only when needed
+4. **Error Resilience**: Automatic retries and graceful degradation
+5. **Caching**: Smart caching to avoid redundant processing
+
+## 🔧 Advanced Usage
+
+### Custom Configuration
+
+```python
+from newsagent.core import NewsAPI
+
+# Custom API instance
+api = NewsAPI(
+    news_api_key="custom_key",
+    gemini_api_key="custom_key"
+)
+
+# Advanced processing
+articles = api.get_daily_news(
+    category="health",
+    use_tiktok_summary=True,
+    page_size=10,
+    max_retries=15  # Higher retry count for better success rate
+)
+```
+
+### Individual Service Usage
+
+```python
+from newsagent.services.processors import ArticleProcessor
+from newsagent.services.ai_services import GeminiSummarizer
+
+# Use individual services
+processor = ArticleProcessor()
+content = processor.extract_content("https://example.com/article")
+
+summarizer = GeminiSummarizer(api_key="your_key")
+summary = summarizer.generate_tiktok_summary(content.text)
 ```
 
 ### Error Handling
 
-The API includes robust error handling:
+```python
+from newsagent import get_daily_news
+from newsagent.data.exceptions import NewsAPIError, ConfigurationError
 
-- If an article can't be fetched, it falls back to the description from NewsAPI
-- If Gemini summarization fails, it uses newspaper3k summary
-- If newspaper3k fails, it uses the article description
-- Invalid URLs are skipped automatically
-- NLTK data is automatically downloaded on first run
+try:
+    articles = get_daily_news("business")
+except ConfigurationError as e:
+    print(f"Missing API keys: {e}")
+except NewsAPIError as e:
+    print(f"API error: {e}")
+```
 
-## TikTok Content Creation
+## 🧪 Testing
 
-This API is designed specifically for creating TikTok content:
+Run the example file to test all functionality:
 
-1. **TikTok-Style Summaries**: When `use_tiktok_summary=True`, summaries are:
-   - Conversational and engaging
-   - Gen-Z friendly with trendy language
-   - Optimized for reading aloud in videos
-   - 3-4 sentences maximum
+```bash
+python example.py
+```
 
-2. **Hashtag Strategy**: Hashtags are generated using:
-   - **newspaper3k's NLP keywords** (automatically extracted and optimized)
-   - Simply appends `#` to each keyword from `article.keywords`
-   - No predefined hashtags - lets newspaper3k determine relevance
-
-3. **Content Structure**: Each article provides:
-   - **Title**: For video captions or text overlays
-   - **Summary**: Script for voiceover or text-to-speech
-   - **Source**: For attribution
-   - **Date**: For timeliness context
-   - **Hashtags**: For discoverability
-
-## Testing
-
-Run the built-in test:
+Or test the original API interface:
 
 ```bash
 python api.py
 ```
 
-This will fetch business news with TikTok summaries and display the results.
+## 📝 Logging
 
-## Dependencies
-
-- `newsapi-python` - NewsAPI client
-- `newspaper3k` - Article parsing and NLP
-- `google-generativeai` - Gemini AI for summaries
-- `python-dotenv` - Environment variable management
-- `nltk` - Natural language processing (automatically downloaded)
-
-## Troubleshooting
-
-### Common Issues
-
-1. **API Key Errors**: Ensure your `.env` file contains valid API keys
-2. **Network Issues**: Some articles may fail to fetch due to paywalls or blocking
-3. **Rate Limits**: NewsAPI has rate limits on free tier
-4. **Gemini Errors**: Check your Gemini API key and quota
-5. **NLTK Download**: First run will download required NLTK data automatically
-
-### Debug Mode
-
-For debugging, you can create a NewsAPI instance directly:
+The package uses structured logging. Configure the logging level:
 
 ```python
-from api import NewsAPI
-
-news_api = NewsAPI()
-# This will show detailed error messages
+import logging
+logging.basicConfig(level=logging.DEBUG)  # For detailed logs
 ```
 
-## License
+## 🔄 Migration from v1.0
 
-This project is open source and available under the MIT License.
+The original `api.py` now serves as a compatibility layer. Existing code will continue to work:
 
-## Contributing
+```python
+# Old way (still works)
+from api import get_daily_news, NewsAPI
 
-Feel free to submit issues and enhancement requests!
+# New way (recommended)
+from newsagent import get_daily_news, NewsAPIClient
+```
+
+## 🤝 Contributing
+
+1. Follow PEP 8 style guidelines
+2. Add docstrings to all public methods
+3. Include type hints
+4. Add appropriate logging
+5. Update tests for new features
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+- Check the example.py file for usage patterns
+- Enable debug logging for troubleshooting
+- Review custom exceptions for specific error types
