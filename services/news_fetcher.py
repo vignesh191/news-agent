@@ -5,10 +5,10 @@ from typing import Optional
 
 from newsapi import NewsApiClient
 
-from ..utils.config import (
+from utils.config import (
     DEFAULT_COUNTRY, DEFAULT_LANGUAGE, API_PAGE_SIZE_LIMIT
 )
-from ..data.exceptions import NewsAPIError
+from data.exceptions import NewsAPIError
 
 logger = logging.getLogger(__name__)
 

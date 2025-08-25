@@ -2,12 +2,12 @@
 
 from typing import Optional
 
-from .services.ai_services import GeminiSummarizer
-from .services.news_fetcher import NewsFetcher
-from .services.processors import ArticleProcessor, HashtagGenerator
-from .data.exceptions import ConfigurationError, NewsAPIError
-from .data.models import ArticleContent, NewsArticle
-from .utils.config import (
+from services.ai_services import GeminiSummarizer
+from services.news_fetcher import NewsFetcher
+from services.processors import ArticleProcessor, HashtagGenerator
+from data.exceptions import ConfigurationError, NewsAPIError
+from data.models import ArticleContent, NewsArticle
+from utils.config import (
     DEFAULT_MAX_HASHTAGS, DEFAULT_MAX_RETRIES, DEFAULT_PAGE_SIZE,
     setup_logging
 )
@@ -36,14 +36,14 @@ class NewsAPI:
         """
         # Validate API keys
         if not news_api_key:
-            from .utils.config import get_api_keys
+            from utils.config import get_api_keys
             try:
                 news_api_key, gemini_api_key = get_api_keys()
             except ValueError as e:
                 raise ConfigurationError(str(e))
         
         if not gemini_api_key:
-            from .utils.config import get_api_keys
+            from utils.config import get_api_keys
             try:
                 _, gemini_api_key = get_api_keys()
             except ValueError as e:

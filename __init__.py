@@ -5,8 +5,8 @@ This package provides a modular structure for fetching news articles, processing
 and generating TikTok-style summaries using various AI services.
 """
 
-from .client import NewsAPIClient, get_daily_news
-from .data import NewsArticle, ArticleContent, NewsAPIError, ConfigurationError, ArticleProcessingError
+from client import NewsAPIClient, get_daily_news
+from data import NewsArticle, ArticleContent, NewsAPIError, ConfigurationError, ArticleProcessingError
 
 __version__ = "1.0.0"
 __all__ = [

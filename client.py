@@ -2,10 +2,10 @@
 
 from typing import Optional
 
-from .utils.config import DEFAULT_MAX_RETRIES, DEFAULT_PAGE_SIZE, setup_logging
-from .core import NewsAPI
-from .data.exceptions import ConfigurationError, NewsAPIError
-from .data.models import NewsArticle
+from utils.config import DEFAULT_MAX_RETRIES, DEFAULT_PAGE_SIZE, setup_logging
+from core import NewsAPI
+from data.exceptions import ConfigurationError, NewsAPIError
+from data.models import NewsArticle
 
 logger = setup_logging()
 

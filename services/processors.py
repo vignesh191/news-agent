@@ -7,9 +7,9 @@ from typing import Optional
 import nltk
 from newspaper import Article
 
-from ..utils.config import CACHE_SIZE
-from ..data.exceptions import ArticleProcessingError
-from ..data.models import ArticleContent
+from utils.config import CACHE_SIZE
+from data.exceptions import ArticleProcessingError
+from data.models import ArticleContent
 
 logger = logging.getLogger(__name__)
 

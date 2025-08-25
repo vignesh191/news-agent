@@ -32,7 +32,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 ### Simple Usage
 
 ```python
-from newsagent import get_daily_news
+from client import get_daily_news
 
 # Get 5 business articles with TikTok summaries
 articles = get_daily_news(
@@ -70,7 +70,7 @@ Convenience function to get daily news articles.
 Singleton-like client for easy access to NewsAPI functionality.
 
 ```python
-from newsagent import NewsAPIClient
+from client import NewsAPIClient
 
 client = NewsAPIClient.get_instance()
 articles = client.get_daily_news("technology", page_size=3)
@@ -81,7 +81,7 @@ articles = client.get_daily_news("technology", page_size=3)
 Core API class for advanced usage and custom configuration.
 
 ```python
-from newsagent.core import NewsAPI
+from core import NewsAPI
 
 api = NewsAPI(news_api_key="your_key", gemini_api_key="your_key")
 articles = api.get_daily_news("science", max_retries=20)
@@ -115,10 +115,10 @@ class ArticleContent:
 
 ## 🏗️ Architecture
 
-The package is organized into focused modules with logical subdirectories:
+The package is organized into focused modules with a clean, flat structure:
 
 ```
-newsagent/
+news-agent/
 ├── __init__.py          # Package interface and main exports
 ├── client.py            # Client interface and convenience functions
 ├── core.py              # Main NewsAPI orchestration class
@@ -131,9 +131,12 @@ newsagent/
 │   ├── ai_services.py   # Gemini AI summarization service
 │   ├── news_fetcher.py  # NewsAPI integration and fetching
 │   └── processors.py    # Article processing and hashtag generation
-└── utils/               # Utilities and configuration
-    ├── __init__.py      # Utils module exports
-    └── config.py        # Configuration constants and setup
+├── utils/               # Utilities and configuration
+│   ├── __init__.py      # Utils module exports
+│   └── config.py        # Configuration constants and setup
+├── requirements.txt     # Python package dependencies
+├── .gitignore          # Git ignore rules
+└── README.md           # This documentation
 ```
 
 ### 📁 **Detailed File Descriptions**
@@ -156,9 +159,9 @@ newsagent/
 - **`config.py`** - Centralized configuration management, environment variable handling, logging setup, and constants
 
 #### **Support Files**
-- **`api.py`** - Backward compatibility layer that re-exports everything from the new structure
-- **`example.py`** - Comprehensive usage examples showing different integration patterns
 - **`requirements.txt`** - Python package dependencies with version specifications
+- **`.gitignore`** - Comprehensive ignore rules for Python projects
+- **`README.md`** - Complete project documentation
 
 ### Key Design Principles
 
@@ -173,7 +176,7 @@ newsagent/
 ### Custom Configuration
 
 ```python
-from newsagent.core import NewsAPI
+from core import NewsAPI
 
 # Custom API instance
 api = NewsAPI(
@@ -193,8 +196,8 @@ articles = api.get_daily_news(
 ### Individual Service Usage
 
 ```python
-from newsagent.services.processors import ArticleProcessor
-from newsagent.services.ai_services import GeminiSummarizer
+from services.processors import ArticleProcessor
+from services.ai_services import GeminiSummarizer
 
 # Use individual services
 processor = ArticleProcessor()
@@ -207,8 +210,8 @@ summary = summarizer.generate_tiktok_summary(content.text)
 ### Error Handling
 
 ```python
-from newsagent import get_daily_news
-from newsagent.data.exceptions import NewsAPIError, ConfigurationError
+from client import get_daily_news
+from data.exceptions import NewsAPIError, ConfigurationError
 
 try:
     articles = get_daily_news("business")
@@ -220,17 +223,13 @@ except NewsAPIError as e:
 
 ## 🧪 Testing
 
-Run the example file to test all functionality:
+Test the functionality directly:
 
 ```bash
-python example.py
+python client.py
 ```
 
-Or test the original API interface:
-
-```bash
-python api.py
-```
+This will fetch business news with TikTok summaries and display the results.
 
 ## 📝 Logging
 
@@ -241,16 +240,33 @@ import logging
 logging.basicConfig(level=logging.DEBUG)  # For detailed logs
 ```
 
-## 🔄 Migration from v1.0
+## 🚀 Quick Start Examples
 
-The original `api.py` now serves as a compatibility layer. Existing code will continue to work:
-
+### Basic News Fetching
 ```python
-# Old way (still works)
-from api import get_daily_news, NewsAPI
+from client import get_daily_news
 
-# New way (recommended)
-from newsagent import get_daily_news, NewsAPIClient
+# Get 5 technology articles
+tech_news = get_daily_news("technology", page_size=5)
+for article in tech_news:
+    print(f"📰 {article.title}")
+    print(f"📝 {article.summary}")
+    print(f"🏷️ {' '.join(article.hashtags[:3])}")
+    print("---")
+```
+
+### Advanced Configuration
+```python
+from core import NewsAPI
+
+# Initialize with custom settings
+api = NewsAPI()
+sports_news = api.get_daily_news(
+    category="sports",
+    use_tiktok_summary=True,
+    page_size=10,
+    max_retries=20
+)
 ```
 
 ## 🤝 Contributing

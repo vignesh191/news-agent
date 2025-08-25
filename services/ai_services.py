@@ -5,7 +5,7 @@ from typing import Optional
 
 from google import genai
 
-from ..utils.config import GEMINI_MODEL, TIKTOK_PROMPT_TEMPLATE, DEFAULT_TEXT_MAX_LENGTH
+from utils.config import GEMINI_MODEL, TIKTOK_PROMPT_TEMPLATE, DEFAULT_TEXT_MAX_LENGTH
 
 logger = logging.getLogger(__name__)
 
