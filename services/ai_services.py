@@ -5,13 +5,13 @@ from typing import Optional
 
 from google import genai
 
-from utils.config import GEMINI_MODEL, TIKTOK_PROMPT_TEMPLATE, DEFAULT_TEXT_MAX_LENGTH
+from utils.config import GEMINI_MODEL, YOUTUBE_PROMPT_TEMPLATE, DEFAULT_TEXT_MAX_LENGTH
 
 logger = logging.getLogger(__name__)
 
 
 class GeminiSummarizer:
-    """Handles TikTok-style content summarization using Google's Gemini AI."""
+    """Handles YouTube-style content summarization using Google's Gemini AI."""
     
     def __init__(self, api_key: str):
         """
@@ -31,21 +31,21 @@ class GeminiSummarizer:
             logger.debug("Gemini client initialized")
         return self._client
     
-    def generate_tiktok_summary(self, text: str, max_length: int = DEFAULT_TEXT_MAX_LENGTH) -> str:
+    def generate_youtube_summary(self, text: str, max_length: int = DEFAULT_TEXT_MAX_LENGTH) -> str:
         """
-        Generate TikTok-style summary using Gemini.
+        Generate YouTube-style summary using Gemini.
         
         Args:
             text: The article text to summarize
             max_length: Maximum text length to send to AI
             
         Returns:
-            TikTok-style summary string
+            YouTube-style summary string
         """
         if not text:
             return "No content available"
         
-        prompt = TIKTOK_PROMPT_TEMPLATE.format(text=text[:max_length])
+        prompt = YOUTUBE_PROMPT_TEMPLATE.format(text=text[:max_length])
         
         try:
             response = self.client.models.generate_content(
@@ -53,9 +53,9 @@ class GeminiSummarizer:
                 contents=prompt
             )
             summary = response.text.strip()
-            logger.info("Generated TikTok summary successfully")
+            logger.info("Generated YouTube summary successfully")
             return summary
             
         except Exception as e:
-            logger.error(f"Error generating TikTok summary: {e}")
+            logger.error(f"Error generating YouTube summary: {e}")
             return "Summary generation failed"

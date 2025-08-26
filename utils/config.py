@@ -28,15 +28,15 @@ CACHE_SIZE = 128
 # Gemini model configuration
 GEMINI_MODEL = "gemini-2.0-flash-exp"
 
-# TikTok prompt template
-TIKTOK_PROMPT_TEMPLATE = """
-You are a TikTok content creator targeting a Gen-Z audience. 
-Summarize the following news article in 3–4 trendy and easy-to-understand sentences. 
-- Make it fun and conversational, with a touch of witty humor. 
-- Keep the audience engaged; views are the goal. 
+# YouTube prompt template
+YOUTUBE_PROMPT_TEMPLATE = """
+You are a YouTube content creator creating engaging video content. 
+Summarize the following news article in 3–4 engaging and easy-to-understand sentences. 
+- Make it conversational and informative, with engaging delivery. 
+- Keep the audience engaged; viewer retention is the goal. 
 - Focus on the main points and avoid unnecessary details.
 - Stick to the facts of the article and provide accurate information.
-- Make it perfect for reading aloud in a TikTok video.
+- Make it perfect for reading aloud in a YouTube video.
 - Do not use any hashtags.
 - Return only the summary, no boilerplate. 
 - Do not use any emojis.

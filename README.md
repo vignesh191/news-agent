@@ -2,11 +2,11 @@
 
 **Transform daily news into engaging content for any audience**
 
-News Agent is a Python library that fetches top news headlines and creates AI-powered summaries optimized for different audiences. Whether you need general news summaries or TikTok-ready content for maximum engagement, News Agent delivers.
+News Agent is a Python library that fetches top news headlines and creates AI-powered summaries optimized for different audiences. Whether you need general news summaries or YouTube-ready content for maximum engagement, News Agent delivers.
 
 ## 🎯 **What It Does**
 
-- **📱 For TikTok Creators**: Get trendy, engaging summaries perfect for Gen-Z audiences and viral content
+- **📱 For YouTube Creators**: Get trendy, engaging summaries perfect for video content and audience engagement
 - **📊 For General Use**: Clean, professional news summaries for blogs, newsletters, or research
 - **⚡ Automatic Processing**: Handles article extraction, AI summarization, and hashtag generation
 - **🔄 Smart Retry Logic**: Never miss content due to failed downloads - automatically fetches backup articles
@@ -14,7 +14,7 @@ News Agent is a Python library that fetches top news headlines and creates AI-po
 ## ✨ Features
 
 - **🔄 Automatic Retry Logic**: Fetches additional articles if some fail to download
-- **🤖 AI-Powered Summaries**: TikTok-style content generation using Google's Gemini AI
+- **🤖 AI-Powered Summaries**: YouTube-style content generation using Google's Gemini AI
 - **📊 Smart Caching**: LRU cache for article processing to improve performance
 - **🏷️ Hashtag Generation**: Automatic hashtag creation from article keywords
 - **📦 Modular Design**: Clean separation of concerns with dedicated modules
@@ -38,21 +38,21 @@ NEWS_API_KEY=your_newsapi_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### 📱 **TikTok Content Creation**
+### 📱 **YouTube Content Creation**
 
 ```python
 from client import get_daily_news
 
-# Get 5 trending tech articles with TikTok-optimized summaries
+# Get 5 trending tech articles with YouTube-optimized summaries
 articles = get_daily_news(
     category="technology",
-    use_tiktok_summary=True,  # 🎯 Optimized for Gen-Z engagement
+    use_youtube_summary=True,  # 🎯 Optimized for video content
     page_size=5
 )
 
 for article in articles:
     print(f"🎬 Title: {article.title}")
-    print(f"📝 Script: {article.summary}")  # Perfect for TikTok voiceover
+    print(f"📝 Script: {article.summary}")  # Perfect for YouTube voiceover
     print(f"🏷️ Hashtags: {' '.join(article.hashtags[:5])}")
     print("---")
 ```
@@ -60,12 +60,12 @@ for article in articles:
 ### 📊 **General News Summaries**
 
 ```python
-from client import get_daily_news
+from news_agent import get_daily_news
 
 # Get professional news summaries for business content
 articles = get_daily_news(
     category="business",
-    use_tiktok_summary=False,  # 📰 Standard professional summaries
+    use_youtube_summary=False,  # 📰 Standard professional summaries
     page_size=10
 )
 
@@ -79,14 +79,14 @@ for article in articles:
 
 ### Main Functions
 
-#### `get_daily_news(category, use_tiktok_summary, page_size, max_retries)`
+#### `get_daily_news(category, use_youtube_summary, page_size, max_retries)`
 
 **The main function you'll use 90% of the time.**
 
 **Parameters:**
 - `category` (str): News category - `"business"`, `"technology"`, `"sports"`, `"entertainment"`, `"health"`, `"science"`
-- `use_tiktok_summary` (bool): 
-  - `True` = TikTok-optimized summaries (trendy, engaging, Gen-Z friendly)
+- `use_youtube_summary` (bool): 
+  - `True` = YouTube-optimized summaries (trendy, engaging, video-friendly)
   - `False` = Professional summaries (clean, factual, business appropriate)
 - `page_size` (int): Number of articles to get (default: 5)
 - `max_retries` (int): Backup articles to try if some fail (default: 10)
@@ -181,7 +181,7 @@ news-agent/
 - **`exceptions.py`** - Custom exception hierarchy: `NewsAPIError`, `ConfigurationError`, `ArticleProcessingError`
 
 #### **`services/` - Service Layer**  
-- **`ai_services.py`** - Gemini AI integration for generating TikTok-style summaries with configurable prompts
+- **`ai_services.py`** - Gemini AI integration for generating YouTube-style summaries with configurable prompts
 - **`news_fetcher.py`** - NewsAPI client wrapper handling headline fetching, pagination, and URL deduplication
 - **`processors.py`** - Article content extraction using newspaper3k, hashtag generation, and caching logic
 
@@ -217,7 +217,7 @@ agent = NewsAgent(
 # Advanced processing with higher success rate
 articles = agent.get_daily_news(
     category="health",
-    use_tiktok_summary=True,
+    use_youtube_summary=True,
     page_size=10,
     max_retries=20  # Try harder to get successful articles
 )
@@ -234,7 +234,7 @@ processor = ArticleProcessor()
 content = processor.extract_content("https://example.com/article")
 
 summarizer = GeminiSummarizer(api_key="your_key")
-summary = summarizer.generate_tiktok_summary(content.text)
+summary = summarizer.generate_youtube_summary(content.text)
 ```
 
 ### Error Handling
@@ -259,7 +259,7 @@ Test the functionality directly:
 python client.py
 ```
 
-This will fetch business news with TikTok summaries and display the results.
+This will fetch business news with YouTube summaries and display the results.
 
 ## 🛠️ **Development Setup**
 
@@ -338,7 +338,7 @@ from news_agent.core import NewsAgent
 agent = NewsAgent()
 sports_news = agent.get_daily_news(
     category="sports",
-    use_tiktok_summary=True,
+    use_youtube_summary=True,
     page_size=10,
     max_retries=20
 )

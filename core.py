@@ -17,7 +17,7 @@ logger = setup_logging()
 
 class NewsAgent:
     """
-    Core API class for fetching and summarizing news articles for TikTok content creation.
+    Core API class for fetching and summarizing news articles for YouTube content creation.
     
     This class orchestrates all services including news fetching, content processing,
     and AI-powered summarization.
@@ -74,9 +74,9 @@ class NewsAgent:
         except Exception:
             return None
     
-    def generate_tiktok_summary(self, text: str, max_length: int = 3000) -> str:
-        """Generate TikTok-style summary using Gemini."""
-        return self._gemini_summarizer.generate_tiktok_summary(text, max_length)
+    def generate_youtube_summary(self, text: str, max_length: int = 3000) -> str:
+        """Generate YouTube-style summary using Gemini."""
+        return self._gemini_summarizer.generate_youtube_summary(text, max_length)
     
     def generate_hashtags(self, url: str, category: str, 
                          article_content: Optional[ArticleContent] = None,
@@ -91,7 +91,7 @@ class NewsAgent:
     
     # Main processing methods
     def _process_single_article(self, article: dict, category: str, 
-                               use_tiktok_summary: bool) -> Optional[NewsArticle]:
+                               use_youtube_summary: bool) -> Optional[NewsArticle]:
         """Process a single article and return NewsArticle object if successful."""
         try:
             # Extract basic info
@@ -111,8 +111,8 @@ class NewsAgent:
                 summary = article.get('description', 'No summary available')
                 logger.warning(f"Could not parse article content for: {title}")
             else:
-                if use_tiktok_summary:
-                    summary = self.generate_tiktok_summary(parsed_article.text)
+                if use_youtube_summary:
+                    summary = self.generate_youtube_summary(parsed_article.text)
                 else:
                     summary = parsed_article.summary or 'No summary available'
             
@@ -131,7 +131,7 @@ class NewsAgent:
             logger.error(f"Error processing article '{title}': {e}")
             return None
 
-    def get_daily_news(self, category: str = "business", use_tiktok_summary: bool = True, 
+    def get_daily_news(self, category: str = "business", use_youtube_summary: bool = True, 
                        page_size: int = DEFAULT_PAGE_SIZE, 
                        max_retries: int = DEFAULT_MAX_RETRIES) -> list[NewsArticle]:
         """
@@ -140,7 +140,7 @@ class NewsAgent:
         
         Args:
             category: News category to fetch
-            use_tiktok_summary: Whether to generate TikTok-style summaries
+            use_youtube_summary: Whether to generate YouTube-style summaries
             page_size: Number of articles to successfully process
             max_retries: Maximum number of additional articles to try if some fail
             
@@ -169,7 +169,7 @@ class NewsAgent:
                 if url:
                     processed_urls.add(url)
                 
-                processed_article = self._process_single_article(article, category, use_tiktok_summary)
+                processed_article = self._process_single_article(article, category, use_youtube_summary)
                 if processed_article:
                     articles_data.append(processed_article)
                 
@@ -199,7 +199,7 @@ class NewsAgent:
                     if url:
                         processed_urls.add(url)
                     
-                    processed_article = self._process_single_article(article, category, use_tiktok_summary)
+                    processed_article = self._process_single_article(article, category, use_youtube_summary)
                     if processed_article:
                         articles_data.append(processed_article)
                     

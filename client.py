@@ -41,7 +41,7 @@ class NewsAgentClient:
         cls._instance = None
 
 
-def get_daily_news(category: str = "business", use_tiktok_summary: bool = True, 
+def get_daily_news(category: str = "business", use_youtube_summary: bool = True, 
                    page_size: int = DEFAULT_PAGE_SIZE, 
                    max_retries: int = DEFAULT_MAX_RETRIES) -> list[NewsArticle]:
     """
@@ -49,7 +49,7 @@ def get_daily_news(category: str = "business", use_tiktok_summary: bool = True,
     
     Args:
         category: News category to fetch
-        use_tiktok_summary: Whether to generate TikTok-style summaries
+        use_youtube_summary: Whether to generate YouTube-style summaries
         page_size: Number of articles to successfully process
         max_retries: Maximum number of additional articles to try if some fail
         
@@ -57,14 +57,14 @@ def get_daily_news(category: str = "business", use_tiktok_summary: bool = True,
         List of NewsArticle objects
     """
     client = NewsAgentClient.get_instance()
-    return client.get_daily_news(category, use_tiktok_summary, page_size, max_retries)
+    return client.get_daily_news(category, use_youtube_summary, page_size, max_retries)
 
 
 def main():
     """Main function for testing the API."""
     try:
-        logger.info("Fetching business news with TikTok summaries...")
-        news = get_daily_news(category="business", use_tiktok_summary=True)
+        logger.info("Fetching business news with YouTube summaries...")
+        news = get_daily_news(category="business", use_youtube_summary=True)
         
         print(f"Found {len(news)} articles:")
         for i, article in enumerate(news, 1):
