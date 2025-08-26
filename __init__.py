@@ -3,18 +3,22 @@ NewsAgent - A clean API for fetching and summarizing news articles for TikTok co
 
 This package provides a modular structure for fetching news articles, processing content,
 and generating TikTok-style summaries using various AI services.
+
+Main usage:
+    from client import get_daily_news
+    articles = get_daily_news("technology", page_size=5)
 """
 
-from client import NewsAPIClient, get_daily_news
-from data import NewsArticle, ArticleContent, NewsAPIError, ConfigurationError, ArticleProcessingError
+from client import get_daily_news
+from data.models import NewsArticle
 
 __version__ = "1.0.0"
 __all__ = [
-    "NewsAPIClient",
-    "get_daily_news", 
-    "NewsArticle",
-    "ArticleContent",
-    "NewsAPIError",
-    "ConfigurationError", 
-    "ArticleProcessingError"
+    "get_daily_news",
+    "NewsArticle"
 ]
+
+# Advanced users can import specific modules:
+# from client import NewsAgentClient
+# from data.exceptions import NewsAPIError, ConfigurationError
+# from core import NewsAgent

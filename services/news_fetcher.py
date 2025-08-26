@@ -1,7 +1,6 @@
 """News fetching and API integration modules."""
 
 import logging
-from typing import Optional
 
 from newsapi import NewsApiClient
 

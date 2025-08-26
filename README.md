@@ -1,6 +1,15 @@
-# News Agent 📰
+# News Agent 📰✨
 
-A clean, modular API for fetching and summarizing news articles for TikTok content creation. This package provides news fetching, content processing, and AI-powered summarization with automatic retry mechanisms for robust article processing.
+**Transform daily news into engaging content for any audience**
+
+News Agent is a Python library that fetches top news headlines and creates AI-powered summaries optimized for different audiences. Whether you need general news summaries or TikTok-ready content for maximum engagement, News Agent delivers.
+
+## 🎯 **What It Does**
+
+- **📱 For TikTok Creators**: Get trendy, engaging summaries perfect for Gen-Z audiences and viral content
+- **📊 For General Use**: Clean, professional news summaries for blogs, newsletters, or research
+- **⚡ Automatic Processing**: Handles article extraction, AI summarization, and hashtag generation
+- **🔄 Smart Retry Logic**: Never miss content due to failed downloads - automatically fetches backup articles
 
 ## ✨ Features
 
@@ -29,22 +38,41 @@ NEWS_API_KEY=your_newsapi_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### Simple Usage
+### 📱 **TikTok Content Creation**
 
 ```python
 from client import get_daily_news
 
-# Get 5 business articles with TikTok summaries
+# Get 5 trending tech articles with TikTok-optimized summaries
 articles = get_daily_news(
-    category="business",
-    use_tiktok_summary=True,
+    category="technology",
+    use_tiktok_summary=True,  # 🎯 Optimized for Gen-Z engagement
     page_size=5
 )
 
 for article in articles:
-    print(f"Title: {article.title}")
-    print(f"Summary: {article.summary}")
-    print(f"Hashtags: {', '.join(article.hashtags)}")
+    print(f"🎬 Title: {article.title}")
+    print(f"📝 Script: {article.summary}")  # Perfect for TikTok voiceover
+    print(f"🏷️ Hashtags: {' '.join(article.hashtags[:5])}")
+    print("---")
+```
+
+### 📊 **General News Summaries**
+
+```python
+from client import get_daily_news
+
+# Get professional news summaries for business content
+articles = get_daily_news(
+    category="business",
+    use_tiktok_summary=False,  # 📰 Standard professional summaries
+    page_size=10
+)
+
+for article in articles:
+    print(f"📰 {article.title}")
+    print(f"📄 {article.summary}")
+    print(f"🔗 Source: {article.source}")
 ```
 
 ## 📖 API Reference
@@ -53,38 +81,40 @@ for article in articles:
 
 #### `get_daily_news(category, use_tiktok_summary, page_size, max_retries)`
 
-Convenience function to get daily news articles.
+**The main function you'll use 90% of the time.**
 
 **Parameters:**
-- `category` (str): News category (business, technology, sports, etc.)
-- `use_tiktok_summary` (bool): Whether to generate TikTok-style summaries
-- `page_size` (int): Number of articles to successfully process (default: 5)
-- `max_retries` (int): Maximum additional articles to try if some fail (default: 10)
+- `category` (str): News category - `"business"`, `"technology"`, `"sports"`, `"entertainment"`, `"health"`, `"science"`
+- `use_tiktok_summary` (bool): 
+  - `True` = TikTok-optimized summaries (trendy, engaging, Gen-Z friendly)
+  - `False` = Professional summaries (clean, factual, business appropriate)
+- `page_size` (int): Number of articles to get (default: 5)
+- `max_retries` (int): Backup articles to try if some fail (default: 10)
 
-**Returns:** List of `NewsArticle` objects
+**Returns:** List of `NewsArticle` objects with `.title`, `.summary`, `.hashtags`, `.source`, `.url`
 
 ### Classes
 
-#### `NewsAPIClient`
+#### `NewsAgentClient`
 
-Singleton-like client for easy access to NewsAPI functionality.
+Singleton-like client for reusable instances across your application.
 
 ```python
-from client import NewsAPIClient
+from client import NewsAgentClient
 
-client = NewsAPIClient.get_instance()
+client = NewsAgentClient.get_instance()
 articles = client.get_daily_news("technology", page_size=3)
 ```
 
-#### `NewsAPI`
+#### `NewsAgent`
 
-Core API class for advanced usage and custom configuration.
+Core class for advanced usage and custom configuration.
 
 ```python
-from core import NewsAPI
+from core import NewsAgent
 
-api = NewsAPI(news_api_key="your_key", gemini_api_key="your_key")
-articles = api.get_daily_news("science", max_retries=20)
+agent = NewsAgent(news_api_key="your_key", gemini_api_key="your_key")
+articles = agent.get_daily_news("science", max_retries=20)
 ```
 
 ### Data Models
@@ -173,23 +203,23 @@ news-agent/
 
 ## 🔧 Advanced Usage
 
-### Custom Configuration
+### 🔧 **Custom Configuration**
 
 ```python
-from core import NewsAPI
+from core import NewsAgent
 
-# Custom API instance
-api = NewsAPI(
-    news_api_key="custom_key",
-    gemini_api_key="custom_key"
+# Custom API instance with your own keys
+agent = NewsAgent(
+    news_api_key="your_custom_key",
+    gemini_api_key="your_custom_key"
 )
 
-# Advanced processing
-articles = api.get_daily_news(
+# Advanced processing with higher success rate
+articles = agent.get_daily_news(
     category="health",
     use_tiktok_summary=True,
     page_size=10,
-    max_retries=15  # Higher retry count for better success rate
+    max_retries=20  # Try harder to get successful articles
 )
 ```
 
@@ -230,6 +260,51 @@ python client.py
 ```
 
 This will fetch business news with TikTok summaries and display the results.
+
+## 🛠️ **Development Setup**
+
+### **For Contributors**
+
+1. **Clone the repository**
+```bash
+git clone <your-repo-url>
+cd news-agent
+```
+
+2. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+3. **Set up environment variables**
+```bash
+# Copy .env.example to .env and add your API keys
+NEWS_API_KEY=your_newsapi_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+4. **Test the setup**
+```bash
+python client.py
+```
+
+### **Project Structure for Developers**
+
+```
+news-agent/
+├── client.py              # 👤 Main user interface
+├── core.py                # 🧠 Core business logic 
+├── data/                  # 📊 Data models and exceptions
+├── services/              # 🔧 External API integrations
+├── utils/                 # 🛠️ Configuration and utilities
+└── requirements.txt       # 📋 Dependencies
+```
+
+**Key Files to Understand:**
+- **`client.py`** - Start here! Contains the main `get_daily_news()` function
+- **`core.py`** - The orchestrator that coordinates all services
+- **`services/`** - Individual services for news fetching, AI processing, content extraction
+- **`utils/config.py`** - All configuration constants and settings
 
 ## 📝 Logging
 

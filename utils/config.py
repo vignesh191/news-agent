@@ -9,13 +9,21 @@ load_dotenv()
 
 # Default configuration
 DEFAULT_PAGE_SIZE = 5
-DEFAULT_MAX_RETRIES = 5
+DEFAULT_MAX_RETRIES = 10
 DEFAULT_MAX_HASHTAGS = 5
-DEFAULT_TEXT_MAX_LENGTH = 5000
+DEFAULT_TEXT_MAX_LENGTH = 16000  # Optimized for Gemini 2.0
 DEFAULT_LANGUAGE = 'en'
 DEFAULT_COUNTRY = 'us'
 API_PAGE_SIZE_LIMIT = 100
 CACHE_SIZE = 128
+
+# TEXT_MAX_LENGTH Explanation:
+# - Gemini 2.0 Flash Exp supports 2M tokens input (~1.5M words)
+# - Average news article: 1000-3000 words
+# - 16000 characters ≈ 2500-4000 words (depending on complexity)
+# - Leaves plenty of room for prompt + article content
+# - Captures full article content for most news pieces
+# - Safe margin below API limits
 
 # Gemini model configuration
 GEMINI_MODEL = "gemini-2.0-flash-exp"
@@ -26,9 +34,12 @@ You are a TikTok content creator targeting a Gen-Z audience.
 Summarize the following news article in 3–4 trendy and easy-to-understand sentences. 
 - Make it fun and conversational, with a touch of witty humor. 
 - Keep the audience engaged; views are the goal. 
-- Focus on the main points and avoid unnecessary details. 
-- The summary should be suitable for reading aloud in a TikTok video.
+- Focus on the main points and avoid unnecessary details.
+- Stick to the facts of the article and provide accurate information.
+- Make it perfect for reading aloud in a TikTok video.
 - Do not use any hashtags.
+- Return only the summary, no boilerplate. 
+- Do not use any emojis.
 
 Article:
 {text}

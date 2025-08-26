@@ -3,36 +3,36 @@
 from typing import Optional
 
 from utils.config import DEFAULT_MAX_RETRIES, DEFAULT_PAGE_SIZE, setup_logging
-from core import NewsAPI
+from core import NewsAgent
 from data.exceptions import ConfigurationError, NewsAPIError
 from data.models import NewsArticle
 
 logger = setup_logging()
 
 
-class NewsAPIClient:
+class NewsAgentClient:
     """
-    Singleton-like client for easy access to NewsAPI functionality.
-    Provides a clean interface while managing the underlying NewsAPI instance.
+    Singleton-like client for easy access to NewsAgent functionality.
+    Provides a clean interface while managing the underlying NewsAgent instance.
     """
     
     _instance = None
     
     @classmethod
     def get_instance(cls, news_api_key: Optional[str] = None, 
-                     gemini_api_key: Optional[str] = None) -> NewsAPI:
+                     gemini_api_key: Optional[str] = None) -> NewsAgent:
         """
-        Get or create a NewsAPI instance.
+        Get or create a NewsAgent instance.
         
         Args:
             news_api_key: NewsAPI key (optional, reads from env if not provided)
             gemini_api_key: Gemini API key (optional, reads from env if not provided)
             
         Returns:
-            NewsAPI instance
+            NewsAgent instance
         """
         if cls._instance is None:
-            cls._instance = NewsAPI(news_api_key, gemini_api_key)
+            cls._instance = NewsAgent(news_api_key, gemini_api_key)
         return cls._instance
     
     @classmethod
@@ -56,7 +56,7 @@ def get_daily_news(category: str = "business", use_tiktok_summary: bool = True,
     Returns:
         List of NewsArticle objects
     """
-    client = NewsAPIClient.get_instance()
+    client = NewsAgentClient.get_instance()
     return client.get_daily_news(category, use_tiktok_summary, page_size, max_retries)
 
 

@@ -15,7 +15,7 @@ from utils.config import (
 logger = setup_logging()
 
 
-class NewsAPI:
+class NewsAgent:
     """
     Core API class for fetching and summarizing news articles for TikTok content creation.
     
@@ -34,18 +34,13 @@ class NewsAPI:
         Raises:
             ConfigurationError: If required API keys are missing
         """
-        # Validate API keys
-        if not news_api_key:
+        # Get API keys from environment if not provided
+        if not news_api_key or not gemini_api_key:
             from utils.config import get_api_keys
             try:
-                news_api_key, gemini_api_key = get_api_keys()
-            except ValueError as e:
-                raise ConfigurationError(str(e))
-        
-        if not gemini_api_key:
-            from utils.config import get_api_keys
-            try:
-                _, gemini_api_key = get_api_keys()
+                env_news_key, env_gemini_key = get_api_keys()
+                news_api_key = news_api_key or env_news_key
+                gemini_api_key = gemini_api_key or env_gemini_key
             except ValueError as e:
                 raise ConfigurationError(str(e))
         
