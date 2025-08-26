@@ -100,7 +100,7 @@ for article in articles:
 Singleton-like client for reusable instances across your application.
 
 ```python
-from client import NewsAgentClient
+from news_agent.client import NewsAgentClient
 
 client = NewsAgentClient.get_instance()
 articles = client.get_daily_news("technology", page_size=3)
@@ -111,7 +111,7 @@ articles = client.get_daily_news("technology", page_size=3)
 Core class for advanced usage and custom configuration.
 
 ```python
-from core import NewsAgent
+from news_agent.core import NewsAgent
 
 agent = NewsAgent(news_api_key="your_key", gemini_api_key="your_key")
 articles = agent.get_daily_news("science", max_retries=20)
@@ -332,11 +332,11 @@ for article in tech_news:
 
 ### Advanced Configuration
 ```python
-from core import NewsAPI
+from news_agent.core import NewsAgent
 
 # Initialize with custom settings
-api = NewsAPI()
-sports_news = api.get_daily_news(
+agent = NewsAgent()
+sports_news = agent.get_daily_news(
     category="sports",
     use_tiktok_summary=True,
     page_size=10,
